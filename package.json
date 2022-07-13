@@ -1,10 +1,16 @@
 {
   "scripts": {
-    "watch": "esbuild --watch ./src/index.ts --bundle --platform=node --outdir=dist",
-    "dev": "node dist/index.js"
+    "watch": "esbuild --watch ./src/index.ts --watch --bundle --platform=node --outdir=dist",
+    "watch1": "esbuild --watch ./src/index.ts --bundle --platform=node --outdir=dist",
+    "dev": "node dist/index.js",
+    "test": "node tests/split.test.js"
   },
   "dependencies": {
     "esbuild": "^0.14.49",
     "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.182",
+    "@types/node": "^18.0.3"
   }
 }
