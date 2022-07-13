@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "watch": "esbuild --watch ./src/index.ts --bundle --platform=node --outdir=dist",
+    "dev": "node dist/index.js"
+  },
+  "dependencies": {
+    "esbuild": "^0.14.49",
+    "lodash": "^4.17.21"
+  }
+}
