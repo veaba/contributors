@@ -24,10 +24,12 @@ interface TypesContributors {
 export const SVG_WIDTH = 800;
 export const SVG_HEIGHT = 1518;
 export const FONT_SIZE = 10
-export const BASE_SIZE = 100
+export const BASE_SIZE = 50
 export const OUT_SIZE = FONT_SIZE + BASE_SIZE
 // 一行多少个
-const ONT_ROW_MAX = Math.ceil(SVG_WIDTH / FONT_SIZE)
+const ONE_ROW_MAX = Math.ceil(SVG_WIDTH / (FONT_SIZE + OUT_SIZE))
+
+console.log('ONE_ROW_MAX=>', ONE_ROW_MAX)
 
 const getContributorsList = (params: TypesContributors) => {
 
@@ -64,29 +66,28 @@ const generateUserListSVG = (userList: UserItem[]) => {
   // split => Two dimensional array 
   let splitList: UserItem[] | UserItem[][] = userList
 
-  if (userList.length > ONT_ROW_MAX) {
+  if (userList.length > ONE_ROW_MAX) {
     // how many row 
-    const row = Math.floor(userList.length / ONT_ROW_MAX)
-
-    console.log('row=>?', row)
+    // const row = Math.ceil(userList.length / ONE_ROW_MAX)
     // split new array
-    splitList = chunk(userList, row)
-  } else {
-
+    splitList = chunk(userList, ONE_ROW_MAX) // row = 3? len = 10? [[3],[3],[3],[1]]
   }
 
-  console.log('新数组=>', splitList)
-  splitList.forEach((item: UserItem[] | UserItem, rowIndex: number) => {
+  console.log(splitList)
+
+  // TODO 处理折行问题？
+  splitList.forEach((item: UserItem[] | UserItem, xIndex: number) => {
     if (Array.isArray(item)) {
-      item.forEach((child, columnIndex) => {
-        const childBlock = svgBlock(child, rowIndex, columnIndex)
+      item.forEach((child, yIndex) => {
+        const childBlock = svgBlock(child, xIndex, yIndex)
         userBlockData += childBlock
       })
     } else {
-      const currentBlock = svgBlock(item, rowIndex, 0)
+      // BUG =? 当过小时候计算错误
+      item.author =xIndex+'-a'
+      const currentBlock = svgBlock(item, 0, xIndex)  // ? BUG? 文字和图片对不齐了
       userBlockData += currentBlock
     }
-
   })
 
   return `${svgStart()}
@@ -97,13 +98,13 @@ const generateUserListSVG = (userList: UserItem[]) => {
 
 // 递归处理
 // const recursivelyHandleData = (list) =>{
-//   list.forEach((item, rowIndex) => {
+//   list.forEach((item, xIndex) => {
 //     if (Array.isArray(item)) {
-//       item.forEach((child, columnIndex) => {
+//       item.forEach((child, yIndex) => {
 
 //       })
 //     } else {
-//       const currentBlock = svgBlock(item, rowIndex, columnIndex = 0)
+//       const currentBlock = svgBlock(item, xIndex, yIndex = 0)
 //       userBlockData += currentBlock
 //     }
 //   })
@@ -119,9 +120,9 @@ const saveSVG = async (filename: string) => {
     const controller = new AbortController();
     const { signal } = controller;
     const svgStr = generateUserListSVG(listTen)
-    console.log('svgStr=>', svgStr)
     // const svgStr = generateSVG()
     // const data = new Uint8Array(Buffer.from(svgStr))
+    console.log('一行有多少个=>', ONE_ROW_MAX)
 
     const promiseWrite = writeFile(filename, svgStr, { encoding: 'utf-8' })
     controller.abort();
