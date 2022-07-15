@@ -32,7 +32,7 @@ export const FONT_SIZE = 20 // 一档的文字间隔 =>
 export const BASE_SIZE = 80
 export const OUT_SIZE = FONT_SIZE + BASE_SIZE
 // 一行多少个
-export const ONE_ROW_MAX = Math.ceil(SVG_WIDTH / (FONT_SIZE + OUT_SIZE))
+export const ONE_ROW_MAX = Math.ceil(SVG_WIDTH / (OUT_SIZE))
 
 // console.log('ONE_ROW_MAX=>', ONE_ROW_MAX)
 
