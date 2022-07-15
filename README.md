@@ -13,22 +13,19 @@
 1. pull request your repo 
 2. we merge your PR
 3. the repo will be generate some svg data
-4. get `https://githubxx.com/veaba/contributors-list/contributors/{owner}/{repo}.svg`
+4. get `https://githubxx.com/veaba/contributors/repos/{owner}/{repo}.svg`
 
+## Design 
 
-## Features
-### TODO Config: ignore some user
+- [] 自动裁剪圆角
+- [x] 左右自动居中特性
+  - 如果当前行没有溢出，则会被居中
 
+  ![auto-center.svg](docs/default/auto-center.svg)
 
-```diff
-export default {
-+  'veaba/veaba': {
-+    ignore: [] // if you need ignore some users
-+  }
-}
-```
+### size
 
-### TODO Config: category
+### category
 
 ```diff
 export default {
@@ -56,22 +53,25 @@ export default {
 ```
 
 
-## Design 
-
-- [] 自动裁剪圆角
-- [x] 左右自动居中特性
-  - 如果当前行没有溢出，则会被居中
-
-  ![auto-center.svg](docs/default/auto-center.svg)
-
-### size
-
-### category
-
 ### circle
 
 ### margin
 
 ### text display
 
-- [] 文字是否需要颜色？
+- [] configure text color? （I'm not sure if I need this feature..）
+
+### config 
+
+maybe you need filter some users.
+
+emm, just like as `vuejs-translations/docs-zh-cn`, it's a Chinese translation for Vue docs community, we does't need show non Chinese contributors in our repo, actually, `vuejs-translations/docs-zh-cn` upstream repo is `vuejs/docs`.
+
+
+```diff
+export default {
++  'veaba/veaba': {
++    ignore: [] // if you need ignore some users
++  }
+}
+```
