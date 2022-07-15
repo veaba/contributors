@@ -22,7 +22,7 @@ interface TypesContributors {
 
 // global constants
 export const SVG_WIDTH = 800;
-export const SVG_HEIGHT = 800;
+export const SVG_HEIGHT = 370;
 export const FONT_SIZE = 20 // 一档的文字间隔 =>
 // 一档 50 x 50 文字间隔为 0  无id
 // 二档 50 x 50 文字间隔为 10 无id
