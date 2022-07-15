@@ -12,6 +12,7 @@
     "esbuild": "^0.14.49",
     "lodash": "^4.17.21",
     "vite-svg-loader": "^3.4.0",
+    "vitest": "^0.18.0",
     "vue": "^3.2.37"
   },
   "devDependencies": {
