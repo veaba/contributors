@@ -1,7 +1,7 @@
 import path from 'path'
 import crypto from 'crypto'
 import fs from 'fs'
-import { BASE_SIZE, FONT_SIZE, OUT_SIZE } from '.';
+import { BASE_SIZE, FONT_SIZE, ONE_ROW_MAX, SVG_WIDTH } from '.';
 import console from 'console';
 
 
@@ -27,6 +27,18 @@ export const getByteLen = (value: string) => {
     }
   }
   return len;
+}
+
+/**
+ * 如果长度是小于的，则会启动居中
+ * 
+*/
+export const autoCenter = (childrenLen: number) => {
+  if (childrenLen < ONE_ROW_MAX) {
+    const autoToCenterX = (BASE_SIZE + FONT_SIZE) * (ONE_ROW_MAX - childrenLen) / 2
+    return autoToCenterX
+  }
+  return 0
 }
 
 export const getImageX = (yIndex: number) => {

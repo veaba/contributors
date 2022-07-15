@@ -7,7 +7,7 @@ const svgData = svg
 
 <template>
   <h1> SVG 展示 效果</h1>
-  <div v-html="svgData"></div>
+  <div v-html="svgData" class="divSVG"></div>
 </template>
 
 
@@ -21,9 +21,7 @@ svg {
 
 }
 
-a {
-  image {
-    border: 1px solid red;
-  }
+.divSVG {
+  text-align: center;
 }
 </style>

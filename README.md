@@ -54,3 +54,24 @@ export default {
   }
 }
 ```
+
+
+## Design 
+
+- [] 自动裁剪圆角
+- [x] 左右自动居中特性
+  - 如果当前行没有溢出，则会被居中
+
+  ![auto-center.svg](docs/default/auto-center.svg)
+
+### size
+
+### category
+
+### circle
+
+### margin
+
+### text display
+
+- [] 文字是否需要颜色？
