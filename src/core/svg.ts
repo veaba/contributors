@@ -38,13 +38,13 @@ export const svgBlock = async (userItem: UserItem, xIndex: number, yIndex: numbe
   const textX = getTextX(yIndex, svgConfig) + autoCenter(childrenLen, svgConfig);
   const textY = getTextY(xIndex, svgConfig)
 
-  console.log(
-    `     (xIndex,yIndex)       => ( ${xIndex}, ${yIndex} )
-     (getImageX,getImageY) => ( ${imageX}, ${imageY} )
-     (getTextX,getTextY)   => ( ${textX}, ${textY} )`
-  )
+  // console.log(
+  //   `     (xIndex,yIndex)       => ( ${xIndex}, ${yIndex} )
+  //    (getImageX,getImageY) => ( ${imageX}, ${imageY} )
+  //    (getTextX,getTextY)   => ( ${textX}, ${textY} )`
+  // )
 
-  console.log('\n')
+  // console.log('\n')
 
   const localImagePath = 'public/avatars/' + userItem.id + '.jpg'
   const base64Image = await imagePathToBase64(localImagePath)

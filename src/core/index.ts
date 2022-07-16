@@ -14,6 +14,7 @@ import { UserConfig, UserItem } from './types';
 import { getOwnerRepo } from './utils';
 
 import config from '../../config'
+import console from 'node:console';
 
 interface TypesContributors {
   repo: string;
@@ -49,6 +50,7 @@ const generateUserListSVG = async (userList: UserItem[], config: UserConfig) => 
   const baseSize = config.size || BASE_SIZE
   const fontSize = config.fontSize || FONT_SIZE
 
+  const isRadius = config.isRadius !== false // default need radius => 50%;
   const outSize = fontSize + baseSize
   const oneRowMax = Math.floor(svgWidth / outSize)
 
@@ -63,7 +65,8 @@ const generateUserListSVG = async (userList: UserItem[], config: UserConfig) => 
     oneRowMax,
     outSize,
     svgWidth,
-    svgHeight
+    svgHeight,
+    isRadius,
   })
 
   return `${svgStart(svgWidth, svgHeight)}
@@ -82,6 +85,18 @@ const saveSVG = async (ownerRepo: string) => {
 
   const options: UserConfig = config[ownerRepo]
 
+  // TODO add test log
+  let name = ownerRepo === 'veaba/contributors' ? ownerRepo.padEnd(29, ' ') : ownerRepo
+  name += ' =>'
+  if (options.isRadius !== false) {
+
+    console.log(name, 'need radius=>')
+  } else {
+    console.log(name, 'not need radius=>')
+  }
+
+
+
   try {
     const controller = new AbortController();
     const svgStr = await generateUserListSVG(listTen, options)
@@ -96,7 +111,6 @@ const saveSVG = async (ownerRepo: string) => {
 }
 
 
-const ownerRepo = 'veaba/contributors';
-saveSVG(ownerRepo)
-
+saveSVG('veaba/contributors')
+saveSVG('vuejs-translations/docs-zh-cn')
 

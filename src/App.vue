@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import Home from './pages/Home.vue'
+import DisplaySVG from './pages/DisplaySVG.vue'
 </script>
 
 <template>
-  <Home></Home>
+  <DisplaySVG></DisplaySVG>
   <footer>
     <p>Copyright @ 2022 <a href="https://github.com/veaba/" target="_blank" rel="noopener noreferrer">Veaba</a></p>
   </footer>

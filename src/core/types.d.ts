@@ -11,6 +11,7 @@ export interface UserConfig {
   width: number
   fontSize: number
   size: number
+  isRadius?: boolean
 }
 export interface ConfigItem {
   [key: string]: UserConfig
@@ -28,4 +29,5 @@ export interface SvgConfig {
   svgWidth: number
   svgHeight: number
   outSize: number
+  isRadius: boolean
 }
