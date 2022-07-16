@@ -2,13 +2,14 @@
   "scripts": {
     "watch": "esbuild --watch ./src/core/index.ts --watch --bundle --platform=node --outdir=dist",
     "serve": "nodemon dist/index.js",
-    "start": "vite",
+    "dev": "vite",
     "test": "vitest tests/split.test.js",
     "test-ui": "vitest  --ui"
   },
   "dependencies": {
     "esbuild": "^0.14.49",
     "lodash": "^4.17.21",
+    "vite": "^3.0.0",
     "vite-svg-loader": "^3.4.0",
     "vitest": "^0.18.0",
     "vue": "^3.2.37"

@@ -13,7 +13,7 @@ const config: ConfigItem =
   'veaba/contributors': {
     ignore: [], // 
     size:100,
-    height: 300,
+    height: 420,
     width: 800,
     fontSize: 20
   },

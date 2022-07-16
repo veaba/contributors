@@ -8,7 +8,7 @@
 
 import { writeFile } from 'node:fs/promises';
 import { chunk } from 'lodash';
-import { svgStart, svgEnd, handleList } from './svg';
+import { svgStart, svgEnd, asyncHandleUsersSVG } from './svg';
 import { listTen } from '../../tests/mock'
 import { UserConfig, UserItem } from './types';
 import { getOwnerRepo } from './utils';
@@ -20,20 +20,12 @@ interface TypesContributors {
 }
 
 // global constants
-export const SVG_WIDTH = 800;
-export const SVG_HEIGHT = 370;
-export const FONT_SIZE = 0 // 一档的文字间隔 =>
-// 一档 50 x 50 文字间隔为 0  无id
-// 二档 50 x 50 文字间隔为 10 无id
-// 三档 50 x 50 文字间隔为 20 有id
-// 四档 70 x 70 文字间隔为 25 有id
-
-export const BASE_SIZE = 100
-export const OUT_SIZE = FONT_SIZE + BASE_SIZE
-// 一行多少个
-export const ONE_ROW_MAX = Math.floor(SVG_WIDTH / OUT_SIZE)
-
-// console.log('ONE_ROW_MAX=>', ONE_ROW_MAX)
+const SVG_WIDTH = 800;
+const SVG_HEIGHT = 370;
+const FONT_SIZE = 0
+const BASE_SIZE = 100
+// const OUT_SIZE = FONT_SIZE + BASE_SIZE
+// const ONE_ROW_MAX = Math.floor(SVG_WIDTH / OUT_SIZE) // max of one row
 
 const getContributorsList = (params: TypesContributors) => {
 
@@ -47,53 +39,42 @@ const generateAvatarMD5Log = () => {
 
 }
 
-// God      => 如何计算居中
-// 啊哈哈哈  => 何计算居中
-// TODO 根据文字计算长度=> getByteLen
-// TODO 横向有多少个
-// TODO 头像长度==>
-const generateSVG = (userList: UserItem[]) => {
-  return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 800 1518" width="800" height="1518">
+const generateUserListSVG = async (userList: UserItem[], config: UserConfig) => {
 
-  <a xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://github.com/veaba" class="sponsorkit-link" target="_blank" id="withastro">
-    <image x="0" y="0" width="100" height="100" xlink:href="https://avatars.githubusercontent.com/u/8652596?s=64&amp;v=4"/>
-    <text x="50" y="120" text-anchor="middle" class="sponsorkit-name" fill="currentColor">veaba</text>
-  </a>
-  <a xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://github.com/veaba1" class="sponsorkit-link" target="_blank" id="withastro">
-    <image x="110" y="0" width="100" height="100" xlink:href="https://avatars.githubusercontent.com/u/8652596?s=64&amp;v=4"/>
-    <text x="160" y="120" text-anchor="middle" class="sponsorkit-name" fill="currentColor">哈哈哈哈sadasd</text>
-  </a>
-
-  <a xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://github.com/veaba1" class="sponsorkit-link" target="_blank" id="withastro">
-    <image x="220" y="0" width="100" height="100" xlink:href="https://avatars.githubusercontent.com/u/8652596?s=64&amp;v=4"/>
-    <text x="290" y="120" text-anchor="middle" class="sponsorkit-name" fill="red">God</text>
-  </a>
-</svg>`
-
-}
-
-const generateUserListSVG = async (userList: UserItem[]) => {
-
-  // split => Two dimensional array 
+  // split => two dimensional array 
   let splitList: UserItem[] | UserItem[][] = userList
 
-  if (userList.length > ONE_ROW_MAX) {
-    // split new array
-    splitList = chunk(userList, ONE_ROW_MAX) // row = 3? len = 10? [[3],[3],[3],[1]]
+  const svgWidth = config.width || SVG_WIDTH
+  const svgHeight = config.height || SVG_HEIGHT
+  const baseSize = config.size || BASE_SIZE
+  const fontSize = config.fontSize || FONT_SIZE
+
+  const outSize = fontSize + baseSize
+  const oneRowMax = Math.floor(svgWidth / outSize)
+
+  // split new array
+  if (userList.length > oneRowMax) {
+    splitList = chunk(userList, oneRowMax)
   }
 
-  const userBlockData = await handleList(splitList)
+  const userBlockData = await asyncHandleUsersSVG(splitList, {
+    baseSize,
+    fontSize,
+    oneRowMax,
+    outSize,
+    svgWidth,
+    svgHeight
+  })
 
-  return `${svgStart()}
+  return `${svgStart(svgWidth, svgHeight)}
   ${userBlockData}
   ${svgEnd()}
   `
 }
 
-const saveSVG = async (filename: string, ownerRepo: string) => {
+const saveSVG = async (ownerRepo: string) => {
 
-  const ownerRepoObj: OwnerRepoItem = getOwnerRepo && getOwnerRepo(ownerRepo) || {}
-  const { owner, repo } = ownerRepoObj || {}
+  const { owner, repo } = getOwnerRepo && getOwnerRepo(ownerRepo) || {}
   if (!owner || !repo) {
     console.error('Invalid repo address:', ownerRepo)
     return
@@ -103,10 +84,10 @@ const saveSVG = async (filename: string, ownerRepo: string) => {
 
   try {
     const controller = new AbortController();
-    const svgStr = await generateUserListSVG(listTen)
+    const svgStr = await generateUserListSVG(listTen, options)
+    const filename = `./repos/${owner}/${repo}.svg`
     const promiseWrite = writeFile(filename, svgStr, { encoding: 'utf-8' })
     controller.abort();
-
     await promiseWrite;
   }
   catch (error) {
@@ -116,6 +97,6 @@ const saveSVG = async (filename: string, ownerRepo: string) => {
 
 
 const ownerRepo = 'veaba/contributors';
-saveSVG('./src/assets/test.svg', ownerRepo)
+saveSVG(ownerRepo)
 
 

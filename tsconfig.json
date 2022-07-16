@@ -12,7 +12,7 @@
     "esModuleInterop": true,
     "lib": ["ESNext", "DOM"],
     "skipLibCheck": true,
-    "types": ["vite/client", "node", "lodash", "vue"]
+    "types": ["node", "lodash", "vue"]
   },
   "include": [
     "src/**/*.ts",

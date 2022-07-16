@@ -20,3 +20,12 @@ export interface OwnerRepoItem {
   owner: string
   repo: string
 }
+
+export interface SvgConfig {
+  baseSize: number
+  fontSize: number
+  oneRowMax: number
+  svgWidth: number
+  svgHeight: number
+  outSize: number
+}

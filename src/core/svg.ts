@@ -1,9 +1,8 @@
-import { SVG_WIDTH, SVG_HEIGHT, OUT_SIZE, FONT_SIZE, BASE_SIZE } from "."
 import { imagePathToBase64 } from "./image"
-import { UserItem } from "./types"
+import { SvgConfig, UserItem } from "./types"
 import { autoCenter, getByteLen, getImageX, getImageY, getTextX, getTextY } from "./utils"
 
-export const svgStart = (width = SVG_WIDTH, height = SVG_HEIGHT) => {
+export const svgStart = (width: number, height: number) => {
   return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 ${width} ${height}" width="${width}" height="${height}">`
 }
 
@@ -26,26 +25,18 @@ export const svgNoFound = () => {
 * @yIndex ???
 * 
 */
-export const svgBlock = async (userItem: UserItem, xIndex: number, yIndex: number, childrenLen: number): Promise<string> => {
-  let authorStrLen = getByteLen(userItem.author)
+export const svgBlock = async (userItem: UserItem, xIndex: number, yIndex: number, childrenLen: number, svgConfig: SvgConfig): Promise<string> => {
+  const { baseSize, fontSize } = svgConfig
 
   // image
-  const imageX = getImageX(yIndex) + autoCenter(childrenLen)
-  const imageY = getImageY(xIndex) // TODO
-  const imageHeight = BASE_SIZE
-  const imageWidth = BASE_SIZE
-
-  let author: string = userItem.author
-
-  let fontScale = Math.floor(BASE_SIZE / 7)
-  if (BASE_SIZE < authorStrLen * 7) {
-    author = author.slice(0, fontScale - 1) + '...'// TODO
-    authorStrLen = fontScale
-  }
+  const imageX = getImageX(yIndex, svgConfig) + autoCenter(childrenLen, svgConfig)
+  const imageY = getImageY(xIndex, svgConfig) // TODO
+  const imageHeight = baseSize
+  const imageWidth = baseSize
 
   // text
-  const textX = getTextX(yIndex) + autoCenter(childrenLen);
-  const textY = getTextY(xIndex)
+  const textX = getTextX(yIndex, svgConfig) + autoCenter(childrenLen, svgConfig);
+  const textY = getTextY(xIndex, svgConfig)
 
   console.log(
     `     (xIndex,yIndex)       => ( ${xIndex}, ${yIndex} )
@@ -61,8 +52,8 @@ export const svgBlock = async (userItem: UserItem, xIndex: number, yIndex: numbe
 
   // if BASE_SIZE too small,or font-size less than 20
   // hidden svg > text node
-  let SVGText = `<text x="${textX}" y="${textY}" text-anchor="middle">${author}</text>`
-  if (BASE_SIZE <= 50 || FONT_SIZE < 20) {
+  let SVGText = `<text x="${textX}" y="${textY}" text-anchor="middle">${userItem.author}</text>`
+  if (baseSize <= 50 || fontSize < 20) {
     SVGText = ''
   }
 
@@ -76,22 +67,17 @@ export const svgBlock = async (userItem: UserItem, xIndex: number, yIndex: numbe
 }
 
 
-export const handleList = async (splitList: (UserItem | UserItem[])[]) => {
+export const asyncHandleUsersSVG = async (splitList: (UserItem | UserItem[])[], config: SvgConfig) => {
   let userBlockData = ''
   await Promise.all(splitList.map(async (item, xIndex) => {
     if (Array.isArray(item)) {
       await Promise.all(item.map(async (child, yIndex) => {
-        const childBlock = await svgBlock(child, xIndex, yIndex, item.length)
+        const childBlock = await svgBlock(child, xIndex, yIndex, item.length, config)
         userBlockData += childBlock
       })
       )
     } else {
-      // BUG =? 当过小时候计算错误
-      // item.author = xIndex + '-a'
-      const currentBlock = await svgBlock(item, 0, xIndex, splitList.length) // ? BUG? 文字和图片对不齐了
-      // ? BUG? 文字和图片对不齐了
-      // ? BUG? 文字和图片对不齐了
-      // ? BUG? 文字和图片对不齐了1
+      const currentBlock = await svgBlock(item, 0, xIndex, splitList.length, config) // ? BUG? 文字和图片对不齐了
       userBlockData += currentBlock
     }
   }))

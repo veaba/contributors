@@ -1,9 +1,9 @@
 import crypto from 'crypto'
 import fs from 'fs'
-import { BASE_SIZE, FONT_SIZE, ONE_ROW_MAX, SVG_WIDTH } from '.';
-import { OwnerRepoItem } from './types';
+import { OwnerRepoItem, SvgConfig } from './types';
 
 
+// TODO
 export const readMD5 = (userId: number) => {
   const buffer1 = fs.readFileSync(`../avatars/${userId}.jpg`, 'utf-8');
   const hash = crypto.createHash('md5');
@@ -11,7 +11,6 @@ export const readMD5 = (userId: number) => {
   const md5 = hash.digest('hex');
   return md5
 }
-
 
 export const getByteLen = (value: string) => {
   let len = 0;
@@ -29,36 +28,38 @@ export const getByteLen = (value: string) => {
 }
 
 /**
- * 如果长度是小于的，则会启动居中
+ * Automatic center filling
+ * @param {number} childrenLen
+ * @param {SvgConfig} svgConfig
  * 
 */
-export const autoCenter = (childrenLen: number) => {
-  if (childrenLen < ONE_ROW_MAX) {
-    const autoToCenterX = (BASE_SIZE + FONT_SIZE) * (ONE_ROW_MAX - childrenLen) / 2
+export const autoCenter = (childrenLen: number, svgConfig: SvgConfig) => {
+  const { svgWidth, outSize } = svgConfig
+  if (childrenLen * outSize < svgWidth) {
+    const autoToCenterX = (svgWidth - outSize * childrenLen) / 2
     return autoToCenterX
   }
   return 0
 }
 
-export const getImageX = (yIndex: number) => {
-  return (BASE_SIZE + FONT_SIZE) * yIndex
+export const getImageX = (yIndex: number, svgConfig: SvgConfig) => {
+  const { outSize } = svgConfig
+  return outSize * yIndex
 }
 
-export const getImageY = (xIndex: number) => {
-  return (BASE_SIZE + FONT_SIZE * 2) * xIndex
+export const getImageY = (xIndex: number, svgConfig: SvgConfig) => {
+  const { baseSize, fontSize } = svgConfig
+  return (baseSize + fontSize * 2) * xIndex
 }
 
-
-/**
- * Scale factor = 7
- * 
-*/
-export const getTextX = (yIndex: number) => {
-  return (BASE_SIZE / 2) + (BASE_SIZE + FONT_SIZE) * yIndex
+export const getTextX = (yIndex: number, svgConfig: SvgConfig) => {
+  const { baseSize, outSize } = svgConfig
+  return (baseSize / 2) + outSize * yIndex
 }
 
-export const getTextY = (xIndex: number) => {
-  return (BASE_SIZE + FONT_SIZE) * (xIndex + 1) + (xIndex * FONT_SIZE)
+export const getTextY = (xIndex: number, svgConfig: SvgConfig) => {
+  const { outSize, fontSize } = svgConfig
+  return (outSize) * (xIndex + 1) + (xIndex * fontSize)
 }
 
 
