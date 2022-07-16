@@ -1,14 +1,12 @@
 {
   "scripts": {
     "watch": "esbuild --watch ./src/core/index.ts --watch --bundle --platform=node --outdir=dist",
-    "dev-node": "node dist/index.js",
-    "dev": "nodemon dist/index.js",
+    "serve": "nodemon dist/index.js",
+    "start": "vite",
     "test": "vitest tests/split.test.js",
-    "test-ui": "vitest  --ui",
-    "start": "vite"
+    "test-ui": "vitest  --ui"
   },
   "dependencies": {
-    "@vitejs/plugin-vue": "^3.0.0",
     "esbuild": "^0.14.49",
     "lodash": "^4.17.21",
     "vite-svg-loader": "^3.4.0",
@@ -19,6 +17,7 @@
     "@types/lodash": "^4.14.182",
     "@types/lodash-es": "^4.17.6",
     "@types/node": "^18.0.4",
+    "@vitejs/plugin-vue": "^3.0.0",
     "@vitest/ui": "^0.18.0",
     "nodemon": "^2.0.19",
     "sass": "^1.53.0"

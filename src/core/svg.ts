@@ -57,12 +57,12 @@ export const svgBlock = async (userItem: UserItem, xIndex: number, yIndex: numbe
 
   const localImagePath = 'public/avatars/' + userItem.id + '.jpg'
   const base64Image = await imagePathToBase64(localImagePath)
-
   const imageBase64Data = 'data:image/PNG;base64,' + base64Image
 
-  // 如果 BASE_SIZE 过小，则不需要显示文字
+  // if BASE_SIZE too small,or font-size less than 20
+  // hidden svg > text node
   let SVGText = `<text x="${textX}" y="${textY}" text-anchor="middle">${author}</text>`
-  if (BASE_SIZE <= 50) {
+  if (BASE_SIZE <= 50 || FONT_SIZE < 20) {
     SVGText = ''
   }
 

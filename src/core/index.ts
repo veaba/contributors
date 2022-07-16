@@ -6,13 +6,12 @@
 // 4.1 第4点中，bug：如果用户更新，则还是旧头像。出现用户头像，除非用头像生成 md5 存储作为指纹
 // import { http } from 'node:http'
 
-import { readMD5, getByteLen } from './utils'
 import { writeFile } from 'node:fs/promises';
 import { chunk } from 'lodash';
-import { Buffer } from 'node:buffer'
-import { svgStart, svgEnd, svgBlock, handleList } from './svg';
+import { svgStart, svgEnd, handleList } from './svg';
 import { listTen } from '../../tests/mock'
-import { UserItem } from './types';
+import { UserConfig, UserItem } from './types';
+import { getOwnerRepo } from './utils';
 
 import config from '../../config'
 
@@ -23,20 +22,28 @@ interface TypesContributors {
 // global constants
 export const SVG_WIDTH = 800;
 export const SVG_HEIGHT = 370;
-export const FONT_SIZE = 20 // 一档的文字间隔 =>
+export const FONT_SIZE = 0 // 一档的文字间隔 =>
 // 一档 50 x 50 文字间隔为 0  无id
 // 二档 50 x 50 文字间隔为 10 无id
 // 三档 50 x 50 文字间隔为 20 有id
 // 四档 70 x 70 文字间隔为 25 有id
 
-export const BASE_SIZE = 80
+export const BASE_SIZE = 100
 export const OUT_SIZE = FONT_SIZE + BASE_SIZE
 // 一行多少个
-export const ONE_ROW_MAX = Math.ceil(SVG_WIDTH / (OUT_SIZE))
+export const ONE_ROW_MAX = Math.floor(SVG_WIDTH / OUT_SIZE)
 
 // console.log('ONE_ROW_MAX=>', ONE_ROW_MAX)
 
 const getContributorsList = (params: TypesContributors) => {
+
+}
+
+const needUpdateUserAvatar = () => {
+
+}
+
+const generateAvatarMD5Log = () => {
 
 }
 
@@ -62,11 +69,8 @@ const generateSVG = (userList: UserItem[]) => {
     <text x="290" y="120" text-anchor="middle" class="sponsorkit-name" fill="red">God</text>
   </a>
 </svg>`
-}
-const needUpdateUserAvatar = () => {
 
 }
-
 
 const generateUserListSVG = async (userList: UserItem[]) => {
 
@@ -78,7 +82,6 @@ const generateUserListSVG = async (userList: UserItem[]) => {
     splitList = chunk(userList, ONE_ROW_MAX) // row = 3? len = 10? [[3],[3],[3],[1]]
   }
 
-
   const userBlockData = await handleList(splitList)
 
   return `${svgStart()}
@@ -87,11 +90,16 @@ const generateUserListSVG = async (userList: UserItem[]) => {
   `
 }
 
-const generateAvatarMD5Log = () => {
+const saveSVG = async (filename: string, ownerRepo: string) => {
 
-}
+  const ownerRepoObj: OwnerRepoItem = getOwnerRepo && getOwnerRepo(ownerRepo) || {}
+  const { owner, repo } = ownerRepoObj || {}
+  if (!owner || !repo) {
+    console.error('Invalid repo address:', ownerRepo)
+    return
+  }
 
-const saveSVG = async (filename: string) => {
+  const options: UserConfig = config[ownerRepo]
 
   try {
     const controller = new AbortController();
@@ -102,12 +110,12 @@ const saveSVG = async (filename: string) => {
     await promiseWrite;
   }
   catch (error) {
-    console.error('err=>',error)
+    console.error('err=>', error)
   }
 }
 
 
-
-saveSVG('./src/assets/test.svg')
+const ownerRepo = 'veaba/contributors';
+saveSVG('./src/assets/test.svg', ownerRepo)
 
 

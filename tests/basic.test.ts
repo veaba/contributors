@@ -1,4 +1,5 @@
 import { assert, expect, test } from 'vitest'
+import { getOwnerRepo } from '../src/core/utils'
 
 // Edit an assertion and save to see HMR in action
 
@@ -18,4 +19,12 @@ test('JSON', () => {
 
   expect(output).eq('{"foo":"hello","bar":"world"}')
   assert.deepEqual(JSON.parse(output), input, 'matches original')
+})
+
+test('veaba/contributors is a repo', () => {
+  const { owner, repo } = getOwnerRepo('veaba/contributors')
+  expect({ owner, repo }).toEqual({
+    owner: 'veaba',
+    repo: 'contributors'
+  })
 })

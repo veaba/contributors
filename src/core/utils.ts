@@ -1,8 +1,7 @@
-import path from 'path'
 import crypto from 'crypto'
 import fs from 'fs'
 import { BASE_SIZE, FONT_SIZE, ONE_ROW_MAX, SVG_WIDTH } from '.';
-import console from 'console';
+import { OwnerRepoItem } from './types';
 
 
 export const readMD5 = (userId: number) => {
@@ -60,4 +59,15 @@ export const getTextX = (yIndex: number) => {
 
 export const getTextY = (xIndex: number) => {
   return (BASE_SIZE + FONT_SIZE) * (xIndex + 1) + (xIndex * FONT_SIZE)
+}
+
+
+export const getOwnerRepo = (ownerRepo: string): OwnerRepoItem => {
+  const ownerRepoSplit = ownerRepo.split('/')
+  if (ownerRepoSplit.length && ownerRepoSplit.length === 2) {
+    const [owner = '', repo = ''] = ownerRepoSplit
+    return { owner, repo }
+  }
+  return { owner: '', repo: '' }
+
 }
