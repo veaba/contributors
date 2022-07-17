@@ -1,4 +1,4 @@
-name: Generate Vuejs-translations/docs-zh-cn
+name: Generate SV
 
 on:
   push:
@@ -31,7 +31,7 @@ jobs:
         env:
           ACCESS_TOKEN_DEPLOY: ${{secrets.ACTIONS_ACCESS_TOKEN_VUEPRESS_CI }}
           PUBLISH_BRANCH: gh-pages
-          PUBLISH_DIR: ./docs/.vuepress/dist
+           PUBLISH_DIR: ./dist
           CNAME: svg.veaba.me
         run: |
           chmod +x deploy/build.sh

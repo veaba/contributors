@@ -11,6 +11,7 @@ export interface UserConfig {
   width: number
   fontSize: number
   size: number
+  ignoreTotal?: number
   isRadius?: boolean
 }
 export interface ConfigItem {
@@ -40,4 +41,46 @@ export interface XYItem {
 export interface ImageXYItem {
   imageX: number
   imageY: number
+}
+
+export interface TotalMap {
+  [k: string]: any
+}
+
+export interface GithubWeeksItem {
+  w: number
+  a: number
+  d: number
+  c: number
+}
+
+interface GithubAuthorItem {
+  login: string,
+  id: number,
+  node_id: string,
+  avatar_url: string,
+  gravatar_id: string,
+  url: string
+  html_url: string
+  followers_url: string
+  following_url: string
+  gists_url: string
+  starred_url: string
+  subscriptions_url: string
+  organizations_url: string
+  repos_url: string
+  events_url: string
+  received_events_url: string
+  type: string
+  site_admin: boolean
+}
+export interface GithubContributorItem {
+  total: number
+  weeks: GithubWeeksItem[]
+  author: GithubAuthorItem
+}
+
+export interface MD5Item {
+  filename: string
+  md5: string
 }

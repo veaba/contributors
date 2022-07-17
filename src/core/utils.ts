@@ -1,11 +1,14 @@
 import crypto from 'crypto'
 import fs from 'fs'
-import { OwnerRepoItem, SvgConfig } from './types';
+import { readFile } from 'node:fs/promises'
+import { resolve } from 'path'
+import { GithubContributorItem, OwnerRepoItem, SvgConfig, TotalMap, UserConfig } from './types';
 
 
 // TODO
-export const readMD5 = (userId: number) => {
-  const buffer1 = fs.readFileSync(`../avatars/${userId}.jpg`, 'utf-8');
+export const readMD5 = async (filename) => {
+  const avatarPath = resolve(__dirname, `../public/avatars/${filename}`)
+  const buffer1 = await readFile(avatarPath, 'utf-8');
   const hash = crypto.createHash('md5');
   hash.update(buffer1, 'utf8');
   const md5 = hash.digest('hex');
@@ -70,5 +73,23 @@ export const getOwnerRepo = (ownerRepo: string): OwnerRepoItem => {
     return { owner, repo }
   }
   return { owner: '', repo: '' }
+}
 
+// get clean data for github api
+export const getTotalList = (data: GithubContributorItem[], repoConfig: UserConfig) => {
+  const cleanList = []
+  for (let i = 0; i < data.length; i++) {
+    const item = data[i]
+    // filter total && ignore
+    if (Number(repoConfig.ignoreTotal) <= item.total && !repoConfig.ignore.includes(item.author.login)) {
+      cleanList.push({
+        total: item.total,
+        author: item.author.login,
+        avatar: item.author.avatar_url,
+        id: item.author.id,
+      })
+    }
+  }
+
+  return cleanList
 }
