@@ -15,7 +15,7 @@
 
 ## Design 
 
-- [] Automatic clipping and rounding of Avatar
+- [x] Automatic clipping and rounding of Avatar
 - [x] Horizontal Auto Center
   ![auto-center.svg](docs/default/auto-center.svg)
 
