@@ -1,4 +1,4 @@
-##  how use 
+##  How use
 
 1. pull request your repo 
 2. we merge your PR
@@ -9,7 +9,7 @@
 
 ```markdown
 
-![veaba.svg](https://raw.githubusercontent.com/veaba/contributors/main/data/veaba/contributors.svg)
+![veaba.svg](https://raw.githubusercontent.com/veaba/contributors/main/repos/veaba/contributors.svg)
 
 ```
 

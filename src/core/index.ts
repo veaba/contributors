@@ -16,10 +16,6 @@ import { getOwnerRepo } from './utils';
 import config from '../../config'
 import console from 'node:console';
 
-interface TypesContributors {
-  repo: string;
-}
-
 // global constants
 const SVG_WIDTH = 800;
 const SVG_HEIGHT = 370;
@@ -27,18 +23,6 @@ const FONT_SIZE = 0
 const BASE_SIZE = 100
 // const OUT_SIZE = FONT_SIZE + BASE_SIZE
 // const ONE_ROW_MAX = Math.floor(SVG_WIDTH / OUT_SIZE) // max of one row
-
-const getContributorsList = (params: TypesContributors) => {
-
-}
-
-const needUpdateUserAvatar = () => {
-
-}
-
-const generateAvatarMD5Log = () => {
-
-}
 
 const generateUserListSVG = async (userList: UserItem[], config: UserConfig) => {
 
