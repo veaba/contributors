@@ -8,7 +8,7 @@
 
 import { writeFile } from 'node:fs/promises';
 import { chunk } from 'lodash';
-import { svgStart, svgEnd, asyncHandleUsersSVG } from './svg';
+import { svgStart, svgEnd, asyncHandleUsersSVG, asyncHandlerUserDefsSVG } from './svg';
 import { listTen } from '../../tests/mock'
 import { UserConfig, UserItem } from './types';
 import { getOwnerRepo } from './utils';
@@ -59,7 +59,7 @@ const generateUserListSVG = async (userList: UserItem[], config: UserConfig) => 
     splitList = chunk(userList, oneRowMax)
   }
 
-  const userBlockData = await asyncHandleUsersSVG(splitList, {
+  const svgConfig = {
     baseSize,
     fontSize,
     oneRowMax,
@@ -67,39 +67,41 @@ const generateUserListSVG = async (userList: UserItem[], config: UserConfig) => 
     svgWidth,
     svgHeight,
     isRadius,
-  })
+  }
 
-  return `${svgStart(svgWidth, svgHeight)}
-  ${userBlockData}
-  ${svgEnd()}
-  `
+  // radius 
+  if (config.isRadius === undefined || config.isRadius === true) {
+    return `${svgStart(svgWidth, svgHeight)}
+  <defs>
+  ${await asyncHandlerUserDefsSVG(splitList, svgConfig)}
+
+  </defs>
+${await asyncHandleUsersSVG(splitList, svgConfig)}
+${svgEnd()}
+    `
+  } else if (config.isRadius === false) {
+    const userBlockData = await asyncHandleUsersSVG(splitList, svgConfig)
+    return `${svgStart(svgWidth, svgHeight)}
+    ${userBlockData}
+${svgEnd()}
+    `
+  }
+  return ''
 }
 
 const saveSVG = async (ownerRepo: string) => {
-
   const { owner, repo } = getOwnerRepo && getOwnerRepo(ownerRepo) || {}
   if (!owner || !repo) {
     console.error('Invalid repo address:', ownerRepo)
     return
   }
 
-  const options: UserConfig = config[ownerRepo]
-
-  // TODO add test log
-  let name = ownerRepo === 'veaba/contributors' ? ownerRepo.padEnd(29, ' ') : ownerRepo
-  name += ' =>'
-  if (options.isRadius !== false) {
-
-    console.log(name, 'need radius=>')
-  } else {
-    console.log(name, 'not need radius=>')
-  }
-
-
+  const userConfig: UserConfig = config[ownerRepo]
 
   try {
     const controller = new AbortController();
-    const svgStr = await generateUserListSVG(listTen, options)
+    const svgStr = await generateUserListSVG(listTen.slice(0, 10), userConfig)
+
     const filename = `./repos/${owner}/${repo}.svg`
     const promiseWrite = writeFile(filename, svgStr, { encoding: 'utf-8' })
     controller.abort();

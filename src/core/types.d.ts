@@ -31,3 +31,13 @@ export interface SvgConfig {
   outSize: number
   isRadius: boolean
 }
+
+export interface XYItem {
+  xIndex: number
+  yIndex: number
+}
+
+export interface ImageXYItem {
+  imageX: number
+  imageY: number
+}

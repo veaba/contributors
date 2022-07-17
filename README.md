@@ -1,13 +1,3 @@
-## Metrics
-
-```js
-200	
-- w - Start of the week, given as a Unix timestamp.
-- a - Number of additions
-- d - Number of deletions
-- c - Number of commits
-```
-
 ##  how use 
 
 1. pull request your repo 
@@ -25,15 +15,13 @@
 
 ## Design 
 
-- [] 自动裁剪圆角
-- [x] 左右自动居中特性
-  - 如果当前行没有溢出，则会被居中
-
+- [] Automatic clipping and rounding of Avatar
+- [x] Horizontal Auto Center
   ![auto-center.svg](docs/default/auto-center.svg)
 
 ### size
 
-### category
+### category(TODO)
 
 ```diff
 export default {
@@ -63,11 +51,26 @@ export default {
 
 ### circle
 
+- `circle`: default: circle 
+
+![](docs/circle/circle-default.svg)
+
+- `isRadius:false`: you can disabled the feature
+
+```diff 
+export default {
++  'vuejs-translations/docs-zh-cn': {
++    isRadius: false,
++  }
+}
+```
+![](docs/circle/no-circle.svg)
+
 ### margin
 
 ### text display
 
-- [] configure text color? （I'm not sure if I need this feature..）
+- [] configure text color? （It't necessary?）
 
 ### config 
 
@@ -75,6 +78,7 @@ maybe you need filter some users.
 
 emm, just like as `vuejs-translations/docs-zh-cn`, it's a Chinese translation for Vue docs community, we does't need show non Chinese contributors in our repo, actually, `vuejs-translations/docs-zh-cn` upstream repo is `vuejs/docs`.
 
+in `config.ts` add your repo configure.
 
 ```diff
 export default {

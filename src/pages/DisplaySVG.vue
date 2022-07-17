@@ -17,8 +17,9 @@ const circleSVGData = circleSVG
   <h1> SVG vuejs-translations/docs-zh-cn demo</h1>
   <div v-html="docsZhCNData" class="divSVG"></div>
 
-  <h1> SVG border-radius </h1>
+  <h1> SVG border-radius 1</h1>
   <div v-html="circleSVGData" class="divSVG"></div>
+
 </template>
 
 

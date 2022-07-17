@@ -21,10 +21,10 @@ const config: ConfigItem =
   // https://github.com/vuejs-translations/docs-zh-cn
   'vuejs-translations/docs-zh-cn': {
     ignore: [], // if you need ignore some users
-    size: 80,
+    size: 64,
     height: 200,
     width: 800,
-    fontSize: 10,
+    fontSize: 20,
     isRadius: false,
   }
 }
