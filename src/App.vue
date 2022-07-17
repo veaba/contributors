@@ -1,3 +1,6 @@
+<!-- 
+  @TODO: preview repo contributors svg page
+ -->
 <script setup lang="ts">
 import DisplaySVG from './pages/DisplaySVG.vue'
 </script>

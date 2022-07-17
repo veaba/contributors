@@ -1,4 +1,3 @@
-import path from 'path'
 import { readFile } from 'node:fs/promises'
 /**
  * save image locally
