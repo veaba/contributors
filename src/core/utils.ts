@@ -1,18 +1,25 @@
 import crypto from 'crypto'
-import fs from 'fs'
-import { readFile } from 'node:fs/promises'
+import { constants } from 'node:fs';
+import { readFile, access } from 'node:fs/promises'
 import { resolve } from 'path'
 import { GithubContributorItem, OwnerRepoItem, SvgConfig, TotalMap, UserConfig } from './types';
 
-
-// TODO
-export const readMD5 = async (filename) => {
+export const readMD5 = async (filename: string) => {
   const avatarPath = resolve(__dirname, `../public/avatars/${filename}`)
-  const buffer1 = await readFile(avatarPath, 'utf-8');
-  const hash = crypto.createHash('md5');
-  hash.update(buffer1, 'utf8');
-  const md5 = hash.digest('hex');
-  return md5
+  try {
+    const buffer = await readFile(avatarPath, 'utf-8');
+    const hash = crypto.createHash('md5');
+    hash.update(buffer, 'utf8');
+    const md5 = hash.digest('hex');
+    return md5
+  } catch (e) {
+    // TODO bug? =>
+    // readMD5=> [AsyncFunction: readMD5]
+    // readMD5=> [AsyncFunction: readMD5]
+    // readMD5=> [AsyncFunction: readMD5]
+    console.error('readMD5=>', readMD5)
+    return ''
+  }
 }
 
 export const getByteLen = (value: string) => {
@@ -92,4 +99,14 @@ export const getTotalList = (data: GithubContributorItem[], repoConfig: UserConf
   }
 
   return cleanList
+}
+
+
+export const isHasFile = async (filepath: string) => {
+  try {
+    await access(filepath, constants.F_OK)
+    return true
+  } catch (err) {
+    return false
+  }
 }

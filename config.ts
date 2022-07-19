@@ -11,27 +11,27 @@ import { ConfigItem } from "./src/core/types"
 const config: ConfigItem =
 {
   // https://github.com/veaba/contributors
-  // 'veaba/contributors': {
-  //   ignore: [], // 
-  //   size: 64,
-  //   height: 200,
-  //   width: 800,
-  //   fontSize: 20
-  // },
+  'veaba/contributors': {
+    ignore: [], // 
+    size: 64,
+    height: 200,
+    width: 800,
+    fontSize: 20
+  },
   // https://github.com/vuejs-translations/docs-zh-cn
   'vuejs-translations/docs-zh-cn': {
     ignore: [
-      'yy990803', 'NataliaTepluhina', 'skirtle-code', 'bencodezen', 'dependabot[bot]',
+      'yyx990803', 'NataliaTepluhina', 'skirtles-code', 'bencodezen', 'dependabot[bot]',
       'LinusBorg', 'KiritaniAyaka', 'Alex-Sokolov', 'sdras', 'marina-mosti', 'CyberAP',
       'danielkellyio', 'tylermercer',
     ], // if you need ignore some users
     // users: [],?? maybe we need this field.
-    ignoreTotal: 2, // 过滤低于这个 total 的用户
-    size: 64,
-    height: 200,
+    ignoreTotal: 1, // 过滤低于这个 total 的用户
+    size: 100,
+    height: 2500, // TODO: maybe automatic
     width: 800,
-    fontSize: 20,
-    isRadius: false,
+    fontSize: 30,
+    // isRadius: false,
   }
 }
 
