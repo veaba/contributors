@@ -87,3 +87,37 @@ export default {
 +  }
 }
 ```
+
+## Examples
+
+
+### demovuejs-translations/docs-zh-cn contributors
+
+in `config.js`:
+
+```diff 
++ const config: ConfigItem =
++ {
++   // https://github.com/vuejs-translations/docs-zh-cn
++   'vuejs-translations/docs-zh-cn': {
++     ignore: [
++       'yyx990803', 'NataliaTepluhina', 'skirtles-code', 'bencodezen', 'dependabot[bot]',
++       'LinusBorg', 'KiritaniAyaka', 'Alex-Sokolov', 'sdras', 'marina-mosti', 'CyberAP',
++       'danielkellyio', 'tylermercer',
++     ], // if you need ignore some users
++     // users: [],?? maybe we need this field.
++     ignoreTotal: 1, // filter some users whose total is too low
++     size: 100,
++     height: 2500, // TODO: maybe automatic
++     width: 800,
++     fontSize: 30,
++   }
++ }
+export default config
+```
+
+![](repos/vuejs-translations/docs-zh-cn.svg)
+
+## TODO
+
+- The picture is not completely loaded
