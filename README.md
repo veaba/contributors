@@ -4,12 +4,12 @@
 2. we merge your PR
 3. the repo will be generate some svg data
 4. add svg path to your repo's:
-  - format: `https://githubxx.com/veaba/contributors/repos/{owner}/{repo}.svg`
-  - try it: `![](https://raw.githubusercontent.com/veaba/contributors/main/src/assets/test.svg)`
+  - format: `https://github.com/veaba/contributors/repos/{owner}/{repo}.svg`
+  - try it: `![](https://raw.githubusercontent.com/veaba/contributors/main/repos/vuejs-translations/docs-zh-cn.svg)`
 
 ```markdown
 
-![veaba.svg](https://raw.githubusercontent.com/veaba/contributors/main/repos/veaba/contributors.svg)
+![docs-zh-cn.svg](https://raw.githubusercontent.com/veaba/contributors/main/repos/vuejs-translations/docs-zh-cn.svg)
 
 ```
 
