@@ -1,10 +1,13 @@
+## TODO
+
+- The picture is not completely loaded
+
 ##  How use
 
-1. pull request your repo 
-2. we merge your PR
-3. the repo will be generate some svg data
-4. add svg path to your repo's:
-  - format: `https://github.com/veaba/contributors/repos/{owner}/{repo}.svg`
+1. Pull request your repo info to [`config.ts`](/config.ts)
+2. Waiting for us to merge your PR.
+3. Add svg path to your repo `README.md`:
+  - format: `https://raw.githubusercontent.com/veaba/contributors/main/repos/{owner}/{repo}.svg`
   - try it: `![](https://raw.githubusercontent.com/veaba/contributors/main/repos/vuejs-translations/docs-zh-cn.svg)`
 
 ```markdown
@@ -117,7 +120,3 @@ export default config
 ```
 
 ![](repos/vuejs-translations/docs-zh-cn.svg)
-
-## TODO
-
-- The picture is not completely loaded
