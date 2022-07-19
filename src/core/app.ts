@@ -71,7 +71,8 @@ ${svgEnd()}
   return ''
 }
 
-const saveSVG = async (ownerRepo: string) => {
+export const saveSVG = async (ownerRepo: string, repoUserList: UserItem[]) => {
+  console.log('saveSVG=>', ownerRepo, repoUserList.length)
   const { owner, repo } = getOwnerRepo && getOwnerRepo(ownerRepo) || {}
   if (!owner || !repo) {
     console.error('Invalid repo address:', ownerRepo)
@@ -79,20 +80,16 @@ const saveSVG = async (ownerRepo: string) => {
   }
 
   const userConfig: UserConfig = config[ownerRepo]
-
   try {
-    const controller = new AbortController();
-    const svgStr = await generateUserListSVG(listTen.slice(0, 10), userConfig)
+    // const controller = new AbortController();
+    const svgStr = await generateUserListSVG(repoUserList, userConfig)
 
     const filename = `./repos/${owner}/${repo}.svg`
-    const promiseWrite = writeFile(filename, svgStr, { encoding: 'utf-8' })
-    controller.abort();
-    await promiseWrite;
-  }
-  catch (error) {
+    await writeFile(filename, svgStr, { encoding: 'utf-8' })
+  } catch (error) {
     console.error('err=>', error)
   }
 }
 
-saveSVG('veaba/contributors')
-saveSVG('vuejs-translations/docs-zh-cn')
+// saveSVG('veaba/contributors',listTen)
+// saveSVG('vuejs-translations/docs-zh-cn',listTen)
