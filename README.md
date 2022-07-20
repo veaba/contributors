@@ -116,7 +116,6 @@ in `config.js`:
 +     fontSize: 30,
 +   }
 + }
-export default config
 ```
 
 ![](repos/vuejs-translations/docs-zh-cn.svg)
