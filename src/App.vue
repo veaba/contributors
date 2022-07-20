@@ -1,15 +1,10 @@
-<!-- 
-  @TODO: preview repo contributors svg page
- -->
 <script setup lang="ts">
-import DisplaySVG from './pages/DisplaySVG.vue'
+import Home from './pages/Home.vue'
 </script>
 
 <template>
-  <DisplaySVG></DisplaySVG>
-  <footer>
-    <p>Copyright @ 2022 <a href="https://github.com/veaba/" target="_blank" rel="noopener noreferrer">Veaba</a></p>
-  </footer>
+
+  <Home></Home>
 </template>
 
 <style>

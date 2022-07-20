@@ -12,7 +12,7 @@
     "esModuleInterop": true,
     "lib": ["ESNext", "DOM"],
     "skipLibCheck": true,
-    "types": ["node", "lodash", "vue"]
+    "types": ["node", "lodash", "vue", "element-plus/global","@element-plus/icons-vue"]
   },
   "include": [
     "src/**/*.ts",

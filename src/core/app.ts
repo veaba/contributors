@@ -10,8 +10,8 @@ import { writeFile } from 'node:fs/promises';
 import { chunk } from 'lodash';
 import { svgStart, svgEnd, asyncHandleUsersSVG, asyncHandlerUserDefsSVG } from './svg';
 import { listTen } from '../../tests/mock'
-import { UserConfig, UserItem } from './types';
-import { getOwnerRepo } from './utils';
+import { UserConfig, UserItem } from '../types';
+import { getOwnerRepo } from '../utils';
 
 import config from '../../config'
 import console from 'node:console';
@@ -24,7 +24,7 @@ const BASE_SIZE = 100
 
 const generateUserListSVG = async (userList: UserItem[], config: UserConfig) => {
 
-  // split => two dimensional array 
+  // split => two dimensional array
   let splitList: UserItem[] | UserItem[][] = userList
 
   const svgWidth = config.width || SVG_WIDTH
@@ -51,7 +51,7 @@ const generateUserListSVG = async (userList: UserItem[], config: UserConfig) => 
     isRadius,
   }
 
-  // radius 
+  // radius
   if (config.isRadius === undefined || config.isRadius === true) {
     return `${svgStart(svgWidth, svgHeight)}
   <defs>

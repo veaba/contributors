@@ -1,4 +1,4 @@
-import { ConfigItem } from "./src/core/types"
+import { ConfigItem } from "./src/types"
 
 /**
  * Github user custom contributors svg here
@@ -12,7 +12,7 @@ const config: ConfigItem =
 {
   // https://github.com/veaba/contributors
   'veaba/contributors': {
-    ignore: [], // 
+    ignore: [], //
     size: 64,
     height: 200,
     width: 800,

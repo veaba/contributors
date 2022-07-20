@@ -2,27 +2,27 @@ import axios from "axios"
 
 import { createWriteStream } from 'node:fs'
 import { resolve } from 'path'
-import { MD5Item, UserConfig, UserItem } from "./types"
+import { MD5Item, UserConfig, UserItem } from "../types"
 import { sortBy } from 'lodash'
 import { data } from '../../tests/mock'
-import { getTotalList, getOwnerRepo, readMD5 } from "./utils"
+import { getTotalList, getOwnerRepo } from "../utils"
 
 
 
 
 /**
  * get contributors avatar to public/avatars
- * 
+ *
  * 1、TODO check local has been save ?
- * 
+ *
  * 2、TODO 通过存在，则通过 md5 判断，一致则略过
- * 
+ *
  * 3、TODO 不一致则拉取
- * 
+ *
  * 4、TODO if not, get remote data and save to public/avatars
- * 
+ *
  * 5、TODO 存储一份本地 avatars 映射的 md5 list
- * 
+ *
 */
 export const getRepoData = async (repoKey: string, repoConfig: UserConfig): Promise<UserItem[]> => {
   const { owner, repo } = getOwnerRepo(repoKey)

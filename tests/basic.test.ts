@@ -1,5 +1,5 @@
 import { assert, expect, test } from 'vitest'
-import { getOwnerRepo } from '../src/core/utils'
+import { getOwnerRepo } from '../src/utils'
 
 // Edit an assertion and save to see HMR in action
 

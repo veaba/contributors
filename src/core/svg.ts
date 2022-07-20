@@ -1,6 +1,6 @@
 import { imagePathToBase64 } from "./image"
-import { ImageXYItem, SvgConfig, UserItem, XYItem } from "./types"
-import { autoCenter, getImageX, getImageY, getTextX, getTextY } from "./utils"
+import { ImageXYItem, SvgConfig, UserItem, XYItem } from "../types"
+import { autoCenter, getImageX, getImageY, getTextX, getTextY } from "../utils"
 
 export const svgStart = (width: number, height: number) => {
   return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 ${width} ${height}" width="${width}" height="${height}">`
@@ -17,7 +17,7 @@ export const svgNoFound = () => {
 /**
  * generate svg block string
  * @param {UserItem} userItem
- * @param {number} xyItem 
+ * @param {number} xyItem
  * @param {number} svgConfig
 */
 export const svgBlockANode = async (userItem: UserItem, xyItem: XYItem, childrenLen: number, svgConfig: SvgConfig): Promise<string> => {

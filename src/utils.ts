@@ -1,53 +1,16 @@
-import crypto from 'crypto'
-import { constants } from 'node:fs';
-import { readFile, access } from 'node:fs/promises'
-import { resolve } from 'path'
-import { GithubContributorItem, OwnerRepoItem, SvgConfig, TotalMap, UserConfig } from './types';
+import {GithubContributorItem, OwnerRepoItem, SvgConfig, UserConfig} from './types';
 
-export const readMD5 = async (filename: string) => {
-  const avatarPath = resolve(__dirname, `../public/avatars/${filename}`)
-  try {
-    const buffer = await readFile(avatarPath, 'utf-8');
-    const hash = crypto.createHash('md5');
-    hash.update(buffer, 'utf8');
-    const md5 = hash.digest('hex');
-    return md5
-  } catch (e) {
-    // TODO bug? =>
-    // readMD5=> [AsyncFunction: readMD5]
-    // readMD5=> [AsyncFunction: readMD5]
-    // readMD5=> [AsyncFunction: readMD5]
-    console.error('readMD5=>', readMD5)
-    return ''
-  }
-}
-
-export const getByteLen = (value: string) => {
-  let len = 0;
-  for (let i = 0; i < value.length; i++) {
-    const doubleLang = value.charAt(i);
-
-    // is chinese
-    if (doubleLang.match(/[^\x00-\xff]/ig) != null) {
-      len += 2;
-    } else {
-      len += 1;
-    }
-  }
-  return len;
-}
 
 /**
  * Automatic center filling
  * @param {number} childrenLen
  * @param {SvgConfig} svgConfig
- * 
+ *
 */
 export const autoCenter = (childrenLen: number, svgConfig: SvgConfig) => {
   const { svgWidth, outSize } = svgConfig
   if (childrenLen * outSize < svgWidth) {
-    const autoToCenterX = (svgWidth - outSize * childrenLen) / 2
-    return autoToCenterX
+    return (svgWidth - outSize * childrenLen) / 2
   }
   return 0
 }
@@ -99,14 +62,4 @@ export const getTotalList = (data: GithubContributorItem[], repoConfig: UserConf
   }
 
   return cleanList
-}
-
-
-export const isHasFile = async (filepath: string) => {
-  try {
-    await access(filepath, constants.F_OK)
-    return true
-  } catch (err) {
-    return false
-  }
 }

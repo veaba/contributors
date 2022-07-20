@@ -3,8 +3,8 @@ import { resolve } from 'path'
 import { saveSVG } from './app';
 import { writeFile, access } from "node:fs/promises" // access
 import { downloadAvatar, getRepoData } from './github';
-import { MD5Item, UserItem } from './types';
-import { isHasFile, readMD5 } from "./utils"
+import { MD5Item, UserItem } from '../types';
+// import { isHasFile, readMD5 } from "../utils"
 
 import md5JSON from '../../public/avatars/avatarsMD5.json'
 
@@ -70,4 +70,4 @@ export const serverStart = async () => {
 
 }
 
-serverStart()
+// serverStart()
