@@ -1,5 +1,5 @@
-import {GithubContributorItem, OwnerRepoItem, SvgConfig, UserConfig} from './types';
-
+import { GithubContributorItem, OwnerRepoItem, SvgConfig, UserConfig } from './types';
+import axios, { Axios, AxiosInstance, AxiosRequestConfig } from 'axios'
 
 /**
  * Automatic center filling
@@ -62,4 +62,35 @@ export const getTotalList = (data: GithubContributorItem[], repoConfig: UserConf
   }
 
   return cleanList
+}
+
+
+const axiosIns = axios.create({});
+
+class AxiosFn extends Axios {
+  instance: AxiosInstance
+  constructor(config: AxiosRequestConfig) {
+    super(config)
+    this.instance = axios.create(config)
+
+    this.instance.interceptors.response.use((res) => {
+      console.log('res==========>', res)
+      if (res && res.data) {
+        return Promise.resolve(res.data);
+      }
+      return res.data;
+    }, (err) => {
+      return Promise.reject(err.response)
+    })
+
+  }
+
+}
+export const axiosGet = async (...args: any) => {
+  try {
+    const res = await axiosIns.get(args);
+    return res.data;
+  } catch (e) {
+    return Promise.reject(e)
+  }
 }

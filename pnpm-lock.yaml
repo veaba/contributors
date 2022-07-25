@@ -19,6 +19,7 @@ specifiers:
   vite-svg-loader: ^3.4.0
   vitest: ^0.18.0
   vue: ^3.2.37
+  vue-highlight-code: ^0.1.16
 
 dependencies:
   '@element-plus/icons-vue': registry.npmmirror.com/@element-plus/icons-vue/2.0.6_vue@3.2.37
@@ -32,6 +33,7 @@ dependencies:
   vite-svg-loader: registry.npmmirror.com/vite-svg-loader/3.4.0
   vitest: registry.npmmirror.com/vitest/0.18.0_sdjmd2bj334rvwfqhfayzmfaju
   vue: registry.npmmirror.com/vue/3.2.37
+  vue-highlight-code: registry.npmmirror.com/vue-highlight-code/0.1.16
 
 devDependencies:
   '@types/lodash': registry.npmmirror.com/@types/lodash/4.14.182
@@ -1016,6 +1018,13 @@ packages:
     dependencies:
       function-bind: registry.npmmirror.com/function-bind/1.1.1
 
+  registry.npmmirror.com/highlight.js/11.6.0:
+    resolution: {integrity: sha512-ig1eqDzJaB0pqEvlPVIpSSyMaO92bH1N2rJpLMN/nX396wTpDA4Eq0uK+7I/2XG17pFaaKE0kjV/XPeGt7Evjw==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/highlight.js/-/highlight.js-11.6.0.tgz}
+    name: highlight.js
+    version: 11.6.0
+    engines: {node: '>=12.0.0'}
+    dev: false
+
   registry.npmmirror.com/ignore-by-default/1.0.1:
     resolution: {integrity: sha512-Ius2VYcGNk7T90CppJqcIkS5ooHUZyIQK+ClZfMfMNFEF9VSE73Fq+906u/CWu92x4gzZMWOwfFYckPObzdEbA==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/ignore-by-default/-/ignore-by-default-1.0.1.tgz}
     name: ignore-by-default
@@ -1747,6 +1756,15 @@ packages:
       '@vue/composition-api':
         optional: true
     dependencies:
+      vue: registry.npmmirror.com/vue/3.2.37
+    dev: false
+
+  registry.npmmirror.com/vue-highlight-code/0.1.16:
+    resolution: {integrity: sha512-aPVwAOxHxG9wCpbZKEmqdlPc/g9l+FT+uYA6bLrqpbEe72KcxqIPuVjjtDX0Eba4qxG35gyxESyiJWeVtsv/Vg==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vue-highlight-code/-/vue-highlight-code-0.1.16.tgz}
+    name: vue-highlight-code
+    version: 0.1.16
+    dependencies:
+      highlight.js: registry.npmmirror.com/highlight.js/11.6.0
       vue: registry.npmmirror.com/vue/3.2.37
     dev: false
 

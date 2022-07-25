@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import {ref} from 'vue'
-import {ElButton, ElInput, ElNotification} from 'element-plus'
-import axios from 'axios'
-import {sortBy} from 'lodash'
-import {BottomRight} from '@element-plus/icons-vue'
-import {getOwnerRepo, getTotalList} from '@/utils'
-import {mockData} from '../mock'
+import { ref } from 'vue'
+import { ElButton, ElInput, ElNotification } from 'element-plus'
+
+import config from '@/../config'
+
+import { sortBy } from 'lodash'
+import { BottomRight } from '@element-plus/icons-vue'
+import { getOwnerRepo, getTotalList, axiosGet } from '@/utils'
+import { mockData } from '../mock'
 
 import veabaSvg from '../../repos/veaba/contributors.svg'
 import docsZhCN from '../../repos/vuejs-translations/docs-zh-cn.svg'
@@ -16,14 +18,18 @@ const docsZhCNData = docsZhCN
 const circleSVGData = circleSVG
 
 const defaultSort = sortBy(mockData, (o) => -o.total) || []
-const sortList = getTotalList(defaultSort, {ignoreTotal: 0, ignore: []})
+const defaultConfig = config['vuejs-translations/docs-zh-cn']
+const sortList = getTotalList(defaultSort, defaultConfig)
+
 /* ******************** ref ******************* */
 const repo = ref('vuejs-translations/docs-zh-cn')
 const loading = ref(false)
 const originData = ref(sortList || [])
 
+const configs = ref(config)
+
 const onSearch = () => {
-  const {owner, repo: repoName} = getOwnerRepo(repo.value)
+  const { owner, repo: repoName } = getOwnerRepo(repo.value)
   if (!owner || !repoName) {
     ElNotification({
       title: 'Please check it',
@@ -41,28 +47,26 @@ const onChange = (t: string) => {
 
 
 const getGithubContributors = async (repoKey: string) => {
-  let repData = []
   try {
     loading.value = true
-    const resp = await axios.get(`http://api.github.com/repos/${repoKey}/stats/contributors`)
-    if (resp?.data) {
-      repData = resp.data || []
-      // console.log('sort totalList=>', _.sortBy(totalList, function (o) { return o.total }))
-      originData.value = sortBy(repData, (o) => o.total);
-      // const cleanData = getTotalList(repData)
+    const resp = await axiosGet(`http://api.github.com/repos/${repoKey}/stats/contributors`)
+    if (Array.isArray(resp)) {
+      // originData.value = sortBy(resp, (o) => o.total); TODO
+      const cleanData = getTotalList(resp, { ignoreTotal: 0, ignore: [] })
+      console.info('cleanData=>', cleanData)
     }
-    loading.value = false
     console.log('res data==>', resp)
   } catch (err) {
     console.error('get repo stats contributors err=>', err)
+  } finally {
+    loading.value = false
   }
 }
 </script>
 <template>
   <div class="searchBody">
     <el-input v-loading.fullscreen.lock="loading" size="large" v-model="repo"
-              placeholder="Please input a repo: {owner}/{repo}"
-              @change="onChange">
+      placeholder="Please input a repo: {owner}/{repo}" @change="onChange">
       <template #append>
         <ElButton type="primary" :disabled="loading" :loading="loading" @click="onSearch">Go</ElButton>
       </template>
@@ -82,6 +86,10 @@ const getGithubContributors = async (repoKey: string) => {
 
 
 <style lang="scss" scoped>
+h1 {
+  text-align: center
+}
+
 .searchBody {
   width: 400px;
   margin: 100px auto;

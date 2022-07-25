@@ -11,5 +11,7 @@ export default {
 </script>
 
 <style scoped>
-
+footer {
+  border: 1px solid red;
+}
 </style>
