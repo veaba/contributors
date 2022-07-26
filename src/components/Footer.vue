@@ -1,7 +1,7 @@
 <template>
-  <footer>
+  <div class="footer">
     Copyright @ 2022 <a href="https://github.com/veaba/" rel="noreferrer" target="_blank">veaba</a>
-  </footer>
+  </div>
 </template>
 
 <script>
@@ -10,8 +10,12 @@ export default {
 };
 </script>
 
-<style scoped>
-footer {
-  border: 1px solid red;
+<style scoped lang="scss">
+.footer {
+  padding: 20px 0;
+  color: #fff;
+  a{
+    color: #fff;
+  }
 }
 </style>

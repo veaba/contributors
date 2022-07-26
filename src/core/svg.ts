@@ -1,6 +1,5 @@
-import { imagePathToBase64 } from "./image"
-import { ImageXYItem, SvgConfig, UserItem, XYItem } from "../types"
-import { autoCenter, getImageX, getImageY, getTextX, getTextY } from "../utils"
+import {ImageXYItem, SvgConfig, UserItem, XYItem} from "../types"
+import {autoCenter, getImageX, getImageY, getTextX, getTextY} from "../utils"
 
 export const svgStart = (width: number, height: number) => {
   return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 ${width} ${height}" width="${width}" height="${height}">`
@@ -31,17 +30,16 @@ export const svgBlockANode = async (userItem: UserItem, xyItem: XYItem, children
   // if BASE_SIZE too small,or font-size less than 20
   // hidden svg > text node
   let SVGText = '';
-  if (svgConfig.baseSize >= 50 && svgConfig.fontSize >= 20) {
+  if (svgConfig.baseSize <= 50 || svgConfig.fontSize <= 20) {
     SVGText = renderTextNode(childrenLen, xyItem, userItem, svgConfig)
   }
 
-  const SVGData = `
+  return `
   <a xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://github.com/${userItem.author}" target="_blank" id="${userItem.author}">
-    ${await renderImageNode({ imageX, imageY }, userItem, svgConfig)}
+    ${await renderImageNode({imageX, imageY}, userItem, svgConfig)}
     ${SVGText}
   </a>
 `
-  return SVGData
 
 }
 
@@ -67,16 +65,29 @@ export const svgBlockCircle = async (userItem: UserItem, xyItem: XYItem, childre
   `
 }
 
+const loadImage = async (userItem: UserItem) => {
+  try {
+    const resp = await fetch(`https://avatars.githubusercontent.com/u/${userItem.id}?v=4`)
+    const blob = await resp.blob()
+    return new Promise((resolve) => {
+      const reader = new FileReader()
+      reader.readAsDataURL(blob)
+      reader.onloadend = () => resolve(reader.result)
+    })
+  } catch (err) {
+    console.error('err=>', err)
+  }
+}
+
 // render svg image node
 const renderImageNode = async (imageXYItem: ImageXYItem, userItem: UserItem, svgConfig: SvgConfig) => {
   const { imageX, imageY } = imageXYItem
   const imageHeight = svgConfig.baseSize
   const imageWidth = svgConfig.baseSize
-  const localImagePath = 'public/avatars/' + userItem.id + '.jpg'
-  const base64Image = await imagePathToBase64(localImagePath)
-  const imageBase64Data = 'data:image/PNG;base64,' + base64Image
+
+  const base64Data = await loadImage(userItem)
   const clipPath = svgConfig.isRadius ? `clip-path="url(#${userItem.author})"` : ''
-  return ` <image x="${imageX}" y="${imageY}" width="${imageWidth}" height="${imageHeight}" ${clipPath} xlink:href="${imageBase64Data}"/>`
+  return ` <image x="${imageX}" y="${imageY}" width="${imageWidth}" height="${imageHeight}" ${clipPath} xlink:href="${base64Data}"/>`
 }
 
 // render svg text node
