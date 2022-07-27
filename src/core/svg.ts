@@ -1,8 +1,8 @@
-import {ImageXYItem, SvgConfig, UserItem, XYItem} from "../types"
-import {autoCenter, getImageX, getImageY, getTextX, getTextY} from "../utils"
+import {ImageXYItem, SvgConfig, UserItem, XYItem} from "@/types"
+import {autoCenter, getImageX, getImageY, getTextX, getTextY} from "@/utils"
 
 export const svgStart = (width: number, height: number) => {
-  return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 ${width} ${height}" width="${width}" height="${height}">`
+  return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${width}" height="${height}">`
 }
 
 export const svgEnd = () => `</svg>`
@@ -17,11 +17,12 @@ export const svgNoFound = () => {
  * generate svg block string
  * @param {UserItem} userItem
  * @param {number} xyItem
+ * @param childrenLen
  * @param {number} svgConfig
-*/
+ */
 export const svgBlockANode = async (userItem: UserItem, xyItem: XYItem, childrenLen: number, svgConfig: SvgConfig): Promise<string> => {
 
-  const { xIndex, yIndex } = xyItem
+  const {xIndex, yIndex} = xyItem
 
   // image
   const imageX = getImageX(yIndex, svgConfig) + autoCenter(childrenLen, svgConfig)
@@ -43,18 +44,9 @@ export const svgBlockANode = async (userItem: UserItem, xyItem: XYItem, children
 
 }
 
-export const svgBlockImage = async (userItem: UserItem, xyItem: XYItem, childrenLen: number, svgConfig: SvgConfig): Promise<string> => {
-  const { xIndex, yIndex } = xyItem
-  // image
-  const imageX = getImageX(yIndex, svgConfig) + autoCenter(childrenLen, svgConfig)
-  const imageY = getImageY(xIndex, svgConfig)
-  const imageXYItem = { imageX, imageY }
-  return await renderImageNode(imageXYItem, userItem, svgConfig)
-}
-
 // isRadius = false
 export const svgBlockCircle = async (userItem: UserItem, xyItem: XYItem, childrenLen: number, svgConfig: SvgConfig): Promise<string> => {
-  const { xIndex, yIndex } = xyItem
+  const {xIndex, yIndex} = xyItem
   const imageX = getImageX(yIndex, svgConfig) + autoCenter(childrenLen, svgConfig)
   const imageY = getImageY(xIndex, svgConfig)
 
@@ -65,7 +57,7 @@ export const svgBlockCircle = async (userItem: UserItem, xyItem: XYItem, childre
   `
 }
 
-const loadImage = async (userItem: UserItem) => {
+export const loadImage = async (userItem: UserItem) => {
   try {
     const resp = await fetch(`https://avatars.githubusercontent.com/u/${userItem.id}?v=4`)
     const blob = await resp.blob()
@@ -76,44 +68,42 @@ const loadImage = async (userItem: UserItem) => {
     })
   } catch (err) {
     console.error('err=>', err)
+    return Promise.reject(err)
   }
 }
 
 // render svg image node
 const renderImageNode = async (imageXYItem: ImageXYItem, userItem: UserItem, svgConfig: SvgConfig) => {
-  const { imageX, imageY } = imageXYItem
+  const {imageX, imageY} = imageXYItem
   const imageHeight = svgConfig.baseSize
   const imageWidth = svgConfig.baseSize
 
   const base64Data = await loadImage(userItem)
   const clipPath = svgConfig.isRadius ? `clip-path="url(#${userItem.author})"` : ''
-  return ` <image x="${imageX}" y="${imageY}" width="${imageWidth}" height="${imageHeight}" ${clipPath} xlink:href="${base64Data}"/>`
+  return `<image x="${imageX}" y="${imageY}" width="${imageWidth}" height="${imageHeight}" ${clipPath} xlink:href="${base64Data}"/>`
 }
 
 // render svg text node
 const renderTextNode = (childrenLen: number, xyItem: XYItem, userItem: UserItem, svgConfig: SvgConfig) => {
-  const { xIndex, yIndex } = xyItem
+  const {xIndex, yIndex} = xyItem
   const textX = getTextX(yIndex, svgConfig) + autoCenter(childrenLen, svgConfig);
   const textY = getTextY(xIndex, svgConfig)
-  return `<text x="${textX}" y="${textY}" text-anchor="middle">${userItem.author}</text>`
+  return `<text x="${textX}" y="${textY}" text-anchor="middle" font-size="15">${userItem.author}</text>`
 }
 
 // rectangle avatar
 export const asyncHandleUsersSVG = async (splitList: (UserItem | UserItem[])[], config: SvgConfig) => {
-  let userBlockData = ''
-  await Promise.all(splitList.map(async (item, xIndex) => {
+  let userLinkPositionData = ''
+  await Promise.all(splitList.map(async (item, index) => {
     if (Array.isArray(item)) {
-      await Promise.all(item.map(async (child, yIndex) => {
-        const childBlock = await svgBlockANode(child, { xIndex, yIndex }, item.length, config)
-        userBlockData += childBlock
-      })
+      return await Promise.all(item.map(async (child, yIndex) => {
+          const childBlock = await svgBlockANode(child, {xIndex: index, yIndex}, item.length, config)
+          userLinkPositionData += childBlock
+        })
       )
-    } else {
-      const currentBlock = await svgBlockANode(item, { xIndex: 0, yIndex: xIndex }, splitList.length, config)
-      userBlockData += currentBlock
     }
   }))
-  return userBlockData
+  return userLinkPositionData
 }
 
 
@@ -122,14 +112,11 @@ export const asyncHandlerUserDefsSVG = async (splitList: (UserItem | UserItem[])
   let userBlockData = ''
   await Promise.all(splitList.map(async (item, xIndex) => {
     if (Array.isArray(item)) {
-      await Promise.all(item.map(async (child, yIndex) => {
-        const childBlock = await svgBlockCircle(child, { xIndex, yIndex }, item.length, config)
-        userBlockData += childBlock
-      })
+      return await Promise.all(item.map(async (child, yIndex) => {
+          const childBlock = await svgBlockCircle(child, {xIndex, yIndex}, item.length, config)
+          userBlockData += childBlock
+        })
       )
-    } else {
-      const currentBlock = await svgBlockCircle(item, { xIndex: 0, yIndex: xIndex }, splitList.length, config)
-      userBlockData += currentBlock
     }
   }))
   return userBlockData

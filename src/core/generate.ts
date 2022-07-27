@@ -13,7 +13,6 @@ export const generateUserListSVG = async (userList: UserItem[], config: UserConf
   let splitList: UserItem[] | UserItem[][] = userList
 
   const svgWidth = config.width || SVG_WIDTH
-  // const svgHeight = config.height
   const baseSize = config.size || BASE_SIZE
   const fontSize = config.fontSize || FONT_SIZE
 
@@ -24,11 +23,12 @@ export const generateUserListSVG = async (userList: UserItem[], config: UserConf
   // split new array
   if (userList.length > oneRowMax) {
     splitList = chunk(userList, oneRowMax)
+  } else {
+    splitList = chunk(userList, userList.length)
   }
 
-  // TODO => 計算不對
-  console.info('splitList=>', splitList, splitList.length + 1, outSize + 5);
-  const svgHeight = (splitList.length + 1) * (outSize + 5)
+  // link <-> link = font-size
+  const svgHeight = splitList.length * outSize + ((splitList.length || 1) - 1) * fontSize
 
   const svgConfig = {
     baseSize,

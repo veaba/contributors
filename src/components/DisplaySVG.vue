@@ -2,33 +2,38 @@
 /**
  * @TODO editable the user input code?
  * */
-import {computed,readonly, inject, ref,toRaw} from 'vue'
+import {computed, inject, ref, toRaw} from 'vue'
 import {sortBy} from 'lodash'
 import {Download} from '@element-plus/icons-vue'
-import {getOwnerRepo, getTotalList, axiosGet} from '@/utils'
+import {axiosGet, getOwnerRepo, getTotalList} from '@/utils'
 import {mockData} from '../mock'
 import docsZhCN from '../../repos/vuejs-translations/docs-zh-cn.svg'
-import {UserConfig, UserItem} from "@/types";
-import {generateUserListSVG} from "@/core/app";
+import {GithubContributorItem, UserConfig, UserItem} from "@/types";
+import {generateUserListSVG} from "@/core/generate";
+// import {loadImage} from "@/core/svg";
 
-const {defaultRepo, defaultRepoConfig, setDefaultRepo} = inject('defaultRepo')
+const {defaultRepo, defaultRepoConfig} = inject('defaultRepo')
 
 const defaultSort = sortBy(mockData, (o) => -o.total) || []
 const sortList = getTotalList(defaultSort, defaultRepoConfig)
 
 /* ******************** ref ******************* */
-const svgData = ref(docsZhCN)
+const searchRepo = ref(defaultRepo.value)
+const svgData = ref(docsZhCN as string)
 const loading = ref(false)
 const originData = ref(sortList || [])
+const contributorList = ref([] as GithubContributorItem[]) // from api not sort
+const isNoFountSearchRepo = ref(false) // repo is 404
+const isNoContributors = ref(false) // if the repo no contributors
 
 /* ******************** computed ************** */
 const isRepo = computed(() => {
-  const {owner, repo} = getOwnerRepo(defaultRepo.value)
+  const {owner, repo} = getOwnerRepo(searchRepo.value)
   return !!(owner && repo);
 })
 /* ******************** function ************** */
 const onSearch = () => {
-  const {owner, repo} = getOwnerRepo(defaultRepo.value)
+  const {owner, repo} = getOwnerRepo(searchRepo.value)
   if (!owner || !repo) {
     ElNotification({
       title: 'Please check it',
@@ -40,8 +45,14 @@ const onSearch = () => {
   getGithubContributors(`${owner}/${repo}`)
 }
 
-const onChange = (t: string) => {
-  console.info('t=>', t);
+// TODO 有些迟滞
+const onChange = (v: string) => {
+  if (v !== defaultRepo.value) {
+    svgData.value = ''
+  } else if (!v) {
+    isNoContributors.value = false
+    isNoFountSearchRepo.value = false
+  }
 }
 
 const downloadSVG = () => {
@@ -49,48 +60,55 @@ const downloadSVG = () => {
   let vNode = document.createDocumentFragment();
   const linkNode = document.createElement('a')
   vNode.appendChild(linkNode)
-  linkNode.innerHTML = defaultRepo.value + '.svg';
+  linkNode.innerHTML = searchRepo.value + '.svg';
   linkNode.href = window.URL.createObjectURL(blob);
-  linkNode.download = defaultRepo.value + '.svg';
+  linkNode.download = searchRepo.value + '.svg';
   linkNode.click()
 }
 
+const init = async () => {
+  loading.value = true
+  isNoFountSearchRepo.value = false
+  isNoContributors.value = false
+}
 const getGithubContributors = async (repoKey: string) => {
-  // TODO
-  const testItem = {
-    "total": 6,
-    "author": "kiaking",
-    "avatar": "https://avatars.githubusercontent.com/u/3753672?v=4",
-    "id": 3753672
-  }
+  // TODO test
+  // await generate(searchRepo.value, defaultRepoConfig.value, sortList.slice(0, 60))// .slice(0,20)
+  try {
+    await init()
+    const resp = await axiosGet(`http://api.github.com/repos/${repoKey}/stats/contributors`)
+    if (Array.isArray(resp)) {
+      isNoFountSearchRepo.value = false
+      isNoContributors.value = false
+      contributorList.value = resp
+      const sortTotalList = sortBy(resp, (o) => -o.total);
+      originData.value = sortTotalList
+      const cleanData = getTotalList(sortTotalList, defaultRepoConfig)
+      await generate(searchRepo, defaultRepoConfig, cleanData)
 
-  await generate(defaultRepo.value, defaultRepoConfig.value, sortList)// .slice(0,20)
-  // try {
-  //   loading.value = true
-  //   const resp = await axiosGet(`http://api.github.com/repos/${repoKey}/stats/contributors`)
-  //   if (Array.isArray(resp)) {
-  //     // originData.value = sortBy(resp, (o) => o.total); TODO
-  //     const cleanData = getTotalList(resp, defaultRepoConfig)
-  //     console.info('cleanData=>', cleanData)
-  //     await generate(defaultRepo, defaultRepoConfig, cleanData)
-  //   }
-  // } catch (err) {
-  //   console.error('get repo stats contributors err=>', err)
-  // } finally {
-  //   loading.value = false
-  // }
+    } else {
+      // if resp = {}
+      contributorList.value = []
+      originData.value = []
+      svgData.value = ''
+      isNoFountSearchRepo.value = false
+      isNoContributors.value = true
+
+    }
+  } catch (err) {
+    console.error('get repo stats contributors err=>', err)
+    // Request failed with status code 404
+    isNoContributors.value = true
+    isNoFountSearchRepo.value = true
+
+  } finally {
+    loading.value = false
+  }
 }
 
 const generate = async (repo: string, userConfig: UserConfig, contributors: UserItem[]) => {
-
   console.time('generate time');
-  // const tasks = await Promise.allSettled(contributors.map(async userItem => {
-  //   return await loadImage(userItem)
-  //   await saveSVG(repo, userConfig, contributors)
-  // }))
-  // TODO 比较 循环里有两个异步链快还是 两个循环里分别一个异步链
-  const svgStr = await generateUserListSVG(contributors, userConfig)
-  svgData.value = svgStr
+  svgData.value = await generateUserListSVG(contributors, userConfig)
   console.timeEnd('generate time');
 }
 
@@ -99,7 +117,7 @@ const generate = async (repo: string, userConfig: UserConfig, contributors: User
 
 <template>
   <div class="searchBody">
-    <el-input v-loading.fullscreen.lock="loading" size="large" v-model="defaultRepo"
+    <el-input v-loading.fullscreen.lock="loading" size="large" v-model="searchRepo"
               placeholder="Please input a repo: {owner}/{repo}" @change="onChange">
       <template #append>
         <div class="el-button--primary--">
@@ -113,18 +131,31 @@ const generate = async (repo: string, userConfig: UserConfig, contributors: User
     <el-button type="success" :icon="Download" round @click="downloadSVG">Download the SVG</el-button>
   </div>
 
-  <!--  <img src="https://avatars.githubusercontent.com/u/3753672?v=4" alt="">-->
   <div class="display-body">
     <div class="display-content">
-      <el-alert v-if="isRepo" center show-icon :title="`the ${ defaultRepo } repository contributors demo.`"
+      <el-alert v-if="isRepo" center show-icon :title="`The { ${ searchRepo } } repository contributors demo.`"
                 type="success" :closable="false"/>
-      <el-alert v-else center show-icon :title="`the ${ defaultRepo } repository contributors demo.`"
+      <el-alert v-else-if="!searchRepo.length" center show-icon :title="`Please input repository name`"
+                type="warning"
+                :closable="false"/>
+      <el-alert v-else center show-icon :title="`This { ${ searchRepo } },is an invalid repository address.`"
                 type="warning"
                 :closable="false"/>
     </div>
 
     <!-- TODO: add svg display loading  -->
-    <div v-if="isRepo" v-loading="loading" v-html="svgData" class="divSVG"></div>
+    <div v-if="isRepo" class="divSVG">
+      <div v-if="svgData.length" v-loading="loading" v-html="svgData"></div>
+    </div>
+
+    <!-- no contributors   -->
+    <div v-if="isNoContributors" class="no-contributors">
+      <el-result
+          icon="warning"
+          title="Ops, 😓"
+          :sub-title="`Unable to find contributors for { ${searchRepo} } repository`"
+      />
+    </div>
   </div>
 
 </template>
@@ -151,5 +182,14 @@ const generate = async (repo: string, userConfig: UserConfig, contributors: User
 .download-group {
   text-align: center;
   margin: 50px;
+}
+
+.no-contributors {
+  width: 320px;
+  height: 320px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: var(--el-box-shadow-dark);
 }
 </style>

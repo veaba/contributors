@@ -6,7 +6,7 @@ export interface UserItem {
 }
 
 export interface UserConfig {
-  ignore: Array<string> // github login user
+  ignore: Array<string> // GitHub login user
   height: number
   width: number
   fontSize: number

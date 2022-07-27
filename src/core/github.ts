@@ -1,11 +1,10 @@
 import axios from "axios"
-
 import { createWriteStream } from 'node:fs'
 import { resolve } from 'path'
-import { UserConfig, UserItem } from "../types"
+import { UserConfig, UserItem } from "@/types"
 import { sortBy } from 'lodash'
 import { data } from '../../tests/mock'
-import { getTotalList, getOwnerRepo } from "../utils"
+import { getTotalList, getOwnerRepo } from "@/utils"
 
 
 

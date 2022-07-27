@@ -1,5 +1,7 @@
-import { assert, expect, test } from 'vitest'
-import { getOwnerRepo } from '../src/utils'
+import {assert, expect, test} from 'vitest'
+import {getOwnerRepo} from '../src/utils'
+import {chunk} from 'lodash'
+import {listTen} from './mock'
 
 // Edit an assertion and save to see HMR in action
 
@@ -22,9 +24,14 @@ test('JSON', () => {
 })
 
 test('veaba/contributors is a repo', () => {
-  const { owner, repo } = getOwnerRepo('veaba/contributors')
-  expect({ owner, repo }).toEqual({
+  const {owner, repo} = getOwnerRepo('veaba/contributors')
+  expect({owner, repo}).toEqual({
     owner: 'veaba',
     repo: 'contributors'
   })
+})
+
+test('split one row', () => {
+  const ret = chunk(listTen, listTen.length)
+  expect(ret).toEqual([listTen])
 })

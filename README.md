@@ -1,26 +1,20 @@
-## TODO
+【WIP】：Website not yet ready
 
-- The picture is not completely loaded
+You can generate as many repository contributor avatar group photos as you want.
 
-##  How use
+![Home](public//home.png)
 
-1. Pull request your repo info to [`config.ts`](/config.ts)
-2. Waiting for us to merge your PR.
-3. Add svg path to your repo `README.md`:
-  - format: `https://raw.githubusercontent.com/veaba/contributors/main/repos/{owner}/{repo}.svg`
-  - try it: `![](https://raw.githubusercontent.com/veaba/contributors/main/repos/vuejs-translations/docs-zh-cn.svg)`
+## TODO How use
 
-```markdown
+### Github Actions
 
-![docs-zh-cn.svg](https://raw.githubusercontent.com/veaba/contributors/main/repos/vuejs-translations/docs-zh-cn.svg)
+### Website
 
-```
-
-## Design 
+## Design
 
 - [x] Automatic clipping and rounding of Avatar
 - [x] Horizontal Auto Center
-  ![auto-center.svg](docs/default/auto-center.svg)
+      ![auto-center.svg](docs/default/auto-center.svg)
 
 ### size
 
@@ -51,22 +45,22 @@ export default {
 }
 ```
 
-
 ### circle
 
-- `circle`: default: circle 
+- `circle`: default: circle
 
 ![](docs/circle/circle-default.svg)
 
 - `isRadius:false`: you can disabled the feature
 
-```diff 
+```diff
 export default {
 +  'vuejs-translations/docs-zh-cn': {
 +    isRadius: false,
 +  }
 }
 ```
+
 ![](docs/circle/no-circle.svg)
 
 ### margin
@@ -75,7 +69,7 @@ export default {
 
 - [] configure text color? （It't necessary?）
 
-### config 
+### config
 
 maybe you need filter some users.
 
@@ -93,12 +87,11 @@ export default {
 
 ## Examples
 
-
 ### demovuejs-translations/docs-zh-cn contributors
 
 in `config.js`:
 
-```diff 
+```diff
 + const config: ConfigItem =
 + {
 +   // https://github.com/vuejs-translations/docs-zh-cn

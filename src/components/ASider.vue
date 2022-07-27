@@ -12,8 +12,6 @@ const {defaultRepo, defaultRepoConfig, setDefaultRepo} = inject('defaultRepo')
 const onClickCard = (key: string, item: UserConfig) => {
   console.log('item>', key, item)
   setDefaultRepo(key, item)
-
-
 }
 const codeToString = (codeItem: UserConfig) => {
   return JSON.stringify(codeItem, null, 2)
