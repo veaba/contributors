@@ -87,7 +87,14 @@ export default {
 
 ## Examples
 
-### demovuejs-translations/docs-zh-cn contributors
+### demo：vuejs-translations/docs-zh-cn contributors
+
+<p align="center"> :point_down: :point_down: :point_down: ↓↓↓↓↓↓ :point_down: :point_down: :point_down:</p>
+
+![](repos/vuejs-translations/docs-zh-cn.svg)
+
+
+<p align="center"> :point_up: :point_up: :point_up: ↑↑↑↑↑↑  :point_up: :point_up: :point_up: :point_up:</p>
 
 in `config.js`:
 
@@ -111,4 +118,4 @@ in `config.js`:
 + }
 ```
 
-![](repos/vuejs-translations/docs-zh-cn.svg)
+
