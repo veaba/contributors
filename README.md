@@ -94,7 +94,7 @@ export default {
 ![](repos/vuejs-translations/docs-zh-cn.svg)
 
 
-<p align="center"> :point_up: :point_up: :point_up: ↑↑↑↑↑↑  :point_up: :point_up: :point_up: :point_up:</p>
+<p align="center"> :point_up: :point_up: :point_up: ↑↑↑↑↑↑  :point_up: :point_up: :point_up:</p>
 
 in `config.js`:
 

@@ -18,7 +18,7 @@ provide('defaultRepo', {defaultRepo, defaultRepoConfig, setDefaultRepo})
 </script>
 <template>
   <ElHeader>
-    <ElMenu :default-avtive="activeMenuIndex" mode="horizontal" :ellipsis="false">
+    <ElMenu class="el-menu" :default-avtive="activeMenuIndex" mode="horizontal" :ellipsis="false">
       <ElMenuItem index="3">veaba/Contributors</ElMenuItem>
       <div class="flex-grow"></div>
       <ElMenuItem index="1">Home</ElMenuItem>
@@ -39,7 +39,7 @@ provide('defaultRepo', {defaultRepo, defaultRepoConfig, setDefaultRepo})
       <DisplaySVG></DisplaySVG>
     </ElMain>
   </ElContainer>
-  <ElFooter>
+  <ElFooter class="el-footer">
     <Footer></Footer>
   </ElFooter>
 </template>
@@ -60,5 +60,8 @@ provide('defaultRepo', {defaultRepo, defaultRepoConfig, setDefaultRepo})
 .container {
   background-image: -webkit-linear-gradient(120deg, #bd34fe 30%, #41d1ff);
   filter: var(--vp-home-hero-image-filter);
+}
+.el-footer{
+  background: #1e1e1e;
 }
 </style>

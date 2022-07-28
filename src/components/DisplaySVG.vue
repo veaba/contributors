@@ -43,6 +43,7 @@ const onSearch = () => {
     return
   }
   getGithubContributors(`${owner}/${repo}`)
+  // test(`${owner}/${repo}`)
 }
 
 // TODO 有些迟滞
@@ -71,6 +72,13 @@ const init = async () => {
   isNoFountSearchRepo.value = false
   isNoContributors.value = false
 }
+
+const test = async ( repoKey: string) => {
+  const cleanData = getTotalList(defaultSort, defaultRepoConfig.value)
+  await generate(searchRepo, defaultRepoConfig, cleanData)
+}
+
+// for get contributors api
 const getGithubContributors = async (repoKey: string) => {
   // TODO test
   // await generate(searchRepo.value, defaultRepoConfig.value, sortList.slice(0, 60))// .slice(0,20)
@@ -83,7 +91,7 @@ const getGithubContributors = async (repoKey: string) => {
       contributorList.value = resp
       const sortTotalList = sortBy(resp, (o) => -o.total);
       originData.value = sortTotalList
-      const cleanData = getTotalList(sortTotalList, defaultRepoConfig)
+      const cleanData = getTotalList(sortTotalList, defaultRepoConfig.value)
       await generate(searchRepo, defaultRepoConfig, cleanData)
 
     } else {
@@ -104,6 +112,11 @@ const getGithubContributors = async (repoKey: string) => {
   } finally {
     loading.value = false
   }
+}
+
+// TODO for has upstream repo, like vuejs-translations/docs-zh-cn
+const getContributorsForPulls = async ()=>{
+
 }
 
 const generate = async (repo: string, userConfig: UserConfig, contributors: UserItem[]) => {

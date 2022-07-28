@@ -1,6 +1,7 @@
 node_modules
 dist
 mock.ts
+mock.js
 build
 .vscode
 .idea
